@@ -1,0 +1,16 @@
+# Ignore temporary files
+*~
+._*
+*.DS_Store
+
+# Ignore binary files
+*.class
+
+# Eclipse --> Exclude only if maven is used
+.classpath
+.project
+.settings/
+
+# Maven
+log/
+target/
