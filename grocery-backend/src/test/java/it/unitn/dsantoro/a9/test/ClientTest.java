@@ -43,7 +43,7 @@ public class ClientTest {
         Properties jndiProps = new Properties();
         jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
         jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
-        jndiProps.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8080");
+        jndiProps.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8081");
         //This property is important for remote resolving
         jndiProps.put("jboss.naming.client.ejb.context", true);
         //This propert is not important for remote resolving
