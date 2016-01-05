@@ -1,3 +1,39 @@
 * Resources, project creation
 - http://theopentutorials.com/examples/java-ee/ejb3/how-to-create-a-ejb-3-x-project-using-maven-in-eclipse-part-1/
 - http://theopentutorials.com/examples/java-ee/ejb3/how-to-create-a-ejb-3-x-project-using-maven-in-eclipse-part-2/
+* Requirements description
+  Un utente può collegarsi alla web-application e creare una propria lista della spesa. Una volta creata, l'utente può inserire nella lista uno o più prodotti. 
+
+  L'utente può modificare i prodotti nella sua lista specificando il nome, la quantità il supermercato ed il costo di ciascuno.
+
+  Quando il prodotto viene acquistato l'utente ha la possibilità di rimuovere un prodotto dalla lista  in quanto è stato acquistato. Tale prodotto non è più disponibile nella lista dei prodotti da acquistare ma è comunque raggiungibile dallo storico dei prodotti dell'utente.
+
+  L'utente può condividere la propria lista della spesa con altri utenti che potranno quindi inserire o rimuovere dalla stessa prodotti.
+
+  La lista della spesa ha una proprietario che può revocare la condivisione della stessa e dei collaboratori che possono solo collaborare inserendo o rimuovendo prodotti dalla stessa.
+
+  È necessario cercare di raggruppare in modo coeso le operazioni tra loro ed i dati tra loro in quanto questi gruppi suggeriranno delle classi
+
+** Classi
+   Nomi, in particolare se legati ad oggetti fisici 
+   1) Lista della spesa
+   2) Prodotto
+   3) Utente
+   4) Storico di prodotti utente
+   5) Proprietario della lista
+   6) Collaboratori della lista
+
+** Attributi
+   Nomi
+   1) Nome prodotto
+   2) Quantità prodotto
+   3) Costo unitario del prodotto
+
+** Metodi
+   Verbi, operazioni
+   1) Creare una lista della spesa
+   2) Inserire prodotto nella lista della spesa
+   3) Modificare prodotto nella lista
+   4) Rimuovere un prodotto dalla lista
+   5) Condividere la propria lista
+   6) Revocare la condivisione della lista
