@@ -28,12 +28,24 @@
    1) Nome prodotto
    2) Quantità prodotto
    3) Costo unitario del prodotto
+   4) Nome della lista
 
 ** Metodi
    Verbi, operazioni
    1) Creare una lista della spesa
-   2) Inserire prodotto nella lista della spesa
-   3) Modificare prodotto nella lista
-   4) Rimuovere un prodotto dalla lista
-   5) Condividere la propria lista
-   6) Revocare la condivisione della lista
+   2) Vedere i prodotti nella lista
+   3) Inserire prodotto nella lista della spesa
+   4) Modificare prodotto nella lista
+   5) Rimuovere un prodotto dalla lista
+   6) Condividere la propria lista
+   7) Revocare la condivisione della lista
+   8) Vedere prodotti nello storico
+
+* Credentials
+  #+BEGIN_EXAMPLE
+  -- Data summary:
+  DATABASE: assignment9
+  USER: assignment9
+  PASSWORD: assignment9
+  #+END_EXAMPLE
+  
