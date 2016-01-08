@@ -9,26 +9,52 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import it.unitn.dsantoro.a9.GroceryListRemote;
-import it.unitn.dsantoro.a9.Product;
+import it.unitn.dsantoro.a9.GroceryListServiceRemote;
+import it.unitn.dsantoro.a9.model.GroceryList;
 
 public class GroceryListServiceTest {
 	
-	static GroceryListRemote gList;
-	static Product pomodoro;
+	static GroceryListServiceRemote gList;
+	static InitialContext initialContext; 
 	
 	@Test
-	public void addProductToList(){			
-		gList.addProduct(pomodoro);
-		assertTrue(gList.list().size()==1);
+	public void addFewLists(){
+		System.out.println("Creating two list: List1 and List2");
+		GroceryList gl1 = gList.addGroceryList("List1-add");
+		assertTrue(gl1 != null);
+		GroceryList gl2 = gList.addGroceryList("List2-add");
+		assertTrue(gl2 != null);
 	}
 	
 	@Test
-	public void removeProductFromList(){
-		gList.removeProduct("1");
-		assertTrue(gList.list().size()==0);
+	public void findList(){
+		String name = "List-find";
+		Long id = gList.addGroceryList(name).getId();
+		System.out.println("Finding list with name" + name);
+		String resName = gList.findGroceryList(id).getName();
+		assertTrue(resName.equals(name));
+	}
+	
+	@Test
+	public void delList(){		
+		String name = "List-del";
+		Long id = gList.addGroceryList(name).getId();
+		System.out.printf("Deleting list with name" + name);
+		boolean result = gList.delGroceryList(id);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void findAllLists(){
+		String name = "List-find";
+		Long id = gList.addGroceryList(name).getId();
+		System.out.println("Finding all lists");
+		int size = gList.findAllGroceryLists().size();
+		assertTrue(size > 1);
 	}
 	
 	@BeforeClass
@@ -48,12 +74,9 @@ public class GroceryListServiceTest {
         // password
         jndiProps.put(Context.SECURITY_CREDENTIALS, "pw");
         
-        InitialContext initialContext = new InitialContext(jndiProps);                 
-        gList = (GroceryListRemote) initialContext.lookup("java:grocery-backend/GroceryList!it.unitn.dsantoro.a9.GroceryListRemote");
+        initialContext = new InitialContext(jndiProps);
+        gList = (GroceryListServiceRemote) initialContext.lookup("java:grocery-backend/GroceryListService!it.unitn.dsantoro.a9.GroceryListServiceRemote");
         
-        pomodoro = new Product();
-        pomodoro.setId("1");
-        pomodoro.setName("pomodori");
     }
 
 //    @AfterClass
