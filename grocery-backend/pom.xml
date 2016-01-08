@@ -23,8 +23,8 @@
 		<version.ejb.plugin>2.3</version.ejb.plugin>
 
 		<!-- maven-compiler-plugin -->
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
 
 		<!-- Optional: to use jboss-as:run goal -->
 		<!--<jboss-as.home>C:\Users\iByteCode\Desktop\jboss-as-7.1.0.Final</jboss-as.home> -->
@@ -91,6 +91,18 @@
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>5.0.6.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>3.3.0.Final</version>
 		</dependency>
 
 	</dependencies>
