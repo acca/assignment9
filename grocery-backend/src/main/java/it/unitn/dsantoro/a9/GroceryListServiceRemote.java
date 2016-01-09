@@ -19,8 +19,9 @@ public interface GroceryListServiceRemote {
 	// Product
 	Collection<Product> findAllProducts(Long listId);
 	Product addProduct(Product product, Long listId);
-	boolean delProduct(Long prodId);
-	Product findProduct(Long prodId);
-	Product updateProduct(Long prodId, String prodName, int prodQuantity, double pricePerUnit);
-	boolean delProductFromCart(Long prodId);
+	void delProduct(Long prodId, Long listId);
+	Product findProduct(Long prodId, Long listId);
+	Product updateProduct(Long listId, Long prodId, String prodName, int prodQuantity, double pricePerUnit);
+	void markProductAsBought(Long prodId, Long listId);
+	void markProductToBuy(Long prodId, Long listId);		
 }

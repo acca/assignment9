@@ -62,8 +62,8 @@ public class GroceryListService implements GroceryListServiceRemote {
 	
 	@Override
 	public Collection<Product> findAllProducts(Long listId) {
-		// TODO Auto-generated method stub
-		return null;
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		return gl.getProducts();		
 	}	
 	
 	@Override
@@ -78,25 +78,39 @@ public class GroceryListService implements GroceryListServiceRemote {
 		return p;
 	}
 	@Override
-	public boolean delProduct(Long prodId) {
-		// TODO Auto-generated method stub
-		return false;
+	public void delProduct(Long prodId, Long listId) {		
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		gl.delProduct(prodId);
+		entityManager.persist(gl);		
 	}
 	@Override
-	public Product findProduct(Long prodId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Product findProduct(Long prodId, Long listId) {
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		return gl.getProduct(prodId);
 	}
 	@Override
-	public Product updateProduct(Long prodId, String prodName, int prodQuantity, double pricePerUnit) {
-		// TODO Auto-generated method stub
-		return null;
+	public Product updateProduct(Long listId, Long prodId, String prodName, int prodQuantity, double pricePerUnit) {		
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		Product p = gl.getProduct(prodId);		
+		p.setName(prodName);
+		p.setQuantity(prodQuantity);
+		p.setPricePerUnit(pricePerUnit);
+		entityManager.persist(gl);
+		return new Product();
 	}
 	
 	@Override
-	public boolean delProductFromCart(Long prodId) {
-		// TODO Auto-generated method stub
-		return false;
+	public void markProductAsBought(Long prodId, Long listId) {
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		gl.getProduct(prodId).setInList(false);
+		entityManager.persist(gl);
+	}
+	
+	@Override
+	public void markProductToBuy(Long prodId, Long listId) {
+		GroceryList gl = entityManager.find(GroceryList.class, listId);
+		gl.getProduct(prodId).setInList(true);
+		entityManager.persist(gl);
 	}
 	
 	@PrePassivate

@@ -81,5 +81,9 @@ public class Product implements Serializable {
 		this.groceryList = groceryList;
 	}
    
+	@Override
+	public String toString() {
+		return "Product name : " + name + ", Product id: " + id;
+	}
 	
 }

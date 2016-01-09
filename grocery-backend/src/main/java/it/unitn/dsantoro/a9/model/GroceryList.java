@@ -3,6 +3,8 @@ package it.unitn.dsantoro.a9.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+
 import javax.persistence.*;
 
 /**
@@ -71,9 +73,11 @@ public class GroceryList implements Serializable {
 	
 	public Product getProduct(Long productId) {
 		Product product = null;
-		while (products.iterator().hasNext()) {
-			if (products.iterator().next().getId() == productId) {
-				product = products.iterator().next();				
+		Iterator<Product> pi = products.iterator();
+		while (pi.hasNext()) {
+			Product p = pi.next(); 
+			if (p.getId() == productId) {
+				product = p;				
 			}			
 		}
 		return product;
@@ -81,7 +85,6 @@ public class GroceryList implements Serializable {
    
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "List: " + name + ",id: " + id;
+		return "List name: " + name + ", List id: " + id;
 	}
 }

@@ -76,6 +76,58 @@ public class GroceryListServiceTest {
 		//assertTrue(size > 1);
 	}
 	
+	@Test
+	public void updateProduct(){
+		System.out.println("Testing the product update");
+		String name = "List-updprod";
+		GroceryList gl = gList.addGroceryList(name);
+		System.out.println("Adding product to list");
+		Product p = new Product("pomodori");
+		p = gList.addProduct(p, gl.getId());
+		gl = gList.findGroceryList(gl.getId());
+		Iterator<Product> pi = gl.getProducts().iterator();
+		System.out.println("Products in list: " + gl);
+		while(pi.hasNext()) {
+			System.out.println("\t"+pi.next());
+		}
+		
+		gList.updateProduct(gl.getId(), p.getId(), "salame", 2, 1);
+		gl = gList.findGroceryList(gl.getId());
+		pi = gl.getProducts().iterator();
+		System.out.println("Products in list: " + gl);
+		while(pi.hasNext()) {
+			System.out.println(pi.next());
+		}
+		//assertTrue(size > 1);
+
+	}
+
+	@Test
+	public void findAllProducts(){
+		System.out.println("Testing methods getAllProduct");
+		String name = "List-findallprod";
+		GroceryList gl = gList.addGroceryList(name);
+		System.out.println("Adding product to list");
+		gList.addProduct(new Product("pomodori"), gl.getId());
+		gList.addProduct(new Product("latte intero"), gl.getId());
+		gList.addProduct(new Product("banane"), gl.getId());
+		gList.addProduct(new Product("olio"), gl.getId());
+		gList.addProduct(new Product("pane"), gl.getId());
+		
+		gl = gList.findGroceryList(gl.getId());
+				
+		Iterator<Product> pi = gl.getProducts().iterator();
+		System.out.println("Products in list: " + gl);
+		while(pi.hasNext()) {
+			System.out.println("\t"+pi.next());
+		}
+		
+		int listSize = gList.findAllProducts(gl.getId()).size();
+		
+		assertTrue(listSize == 5);
+	}
+	
+	
 	@BeforeClass
     public static void beforeClass() throws NamingException {
         System.out.println("Testing methods on the remote list");
