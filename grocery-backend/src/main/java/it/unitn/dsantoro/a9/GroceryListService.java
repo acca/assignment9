@@ -32,7 +32,7 @@ public class GroceryListService implements GroceryListServiceRemote {
 	public GroceryList addGroceryList(String listName) {
 		GroceryList groceryList = new GroceryList();
 		groceryList.setName(listName);
-		entityManager.persist(groceryList);		
+		entityManager.persist(groceryList);
 		return groceryList;
 	}
 	@Override
@@ -52,13 +52,47 @@ public class GroceryListService implements GroceryListServiceRemote {
 		return (Collection<GroceryList>) query.getResultList();
 	}
 	@Override
-	public Collection<Product> findAllProducts() {
+	public GroceryList findGroceryList(Long listId) {
+		return entityManager.find(GroceryList.class, listId);		
+	}
+	
+	@Override
+	public Collection<Product> findAllProducts(Long listId) {
+		// TODO Auto-generated method stub
+		return null;
+	}	
+	
+	@Override
+	public Product addProduct(Product product, Long listId) {
+		Product p = null;
+		GroceryList gList  = findGroceryList(listId);
+		if ( (gList != null) && (!product.getName().equals("")) ) {
+			p = product;
+		}
+		gList.addProduct(product);
+		entityManager.persist(gList);
+		return p;
+	}
+	@Override
+	public boolean delProduct(Long prodId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public Product findProduct(Long prodId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public GroceryList findGroceryList(Long listId) {
-		return entityManager.find(GroceryList.class, listId);		
+	public Product updateProduct(Long prodId, String prodName, int prodQuantity, double pricePerUnit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean delProductFromCart(Long prodId) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	@PrePassivate

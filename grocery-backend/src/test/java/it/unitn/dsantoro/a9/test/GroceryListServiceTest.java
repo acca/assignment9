@@ -15,6 +15,7 @@ import org.junit.runners.MethodSorters;
 
 import it.unitn.dsantoro.a9.GroceryListServiceRemote;
 import it.unitn.dsantoro.a9.model.GroceryList;
+import it.unitn.dsantoro.a9.model.Product;
 
 public class GroceryListServiceTest {
 	
@@ -34,7 +35,7 @@ public class GroceryListServiceTest {
 	public void findList(){
 		String name = "List-find";
 		Long id = gList.addGroceryList(name).getId();
-		System.out.println("Finding list with name" + name);
+		System.out.println("Finding list with name " + name);
 		String resName = gList.findGroceryList(id).getName();
 		assertTrue(resName.equals(name));
 	}
@@ -57,9 +58,19 @@ public class GroceryListServiceTest {
 		assertTrue(size > 1);
 	}
 	
+	@Test
+	public void addProductToList(){
+		String name = "List-addprod";
+		GroceryList gl = gList.addGroceryList(name);
+		System.out.println("Adding product to list");
+		Product p = new Product("pomodori");
+		gList.addProduct(p, gl.getId());		
+		//assertTrue(size > 1);
+	}
+	
 	@BeforeClass
     public static void beforeClass() throws NamingException {
-        System.out.println("Testing insertion of products into the remote list");
+        System.out.println("Testing methods on the remote list");
         Properties jndiProps = new Properties();
         jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
         jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        

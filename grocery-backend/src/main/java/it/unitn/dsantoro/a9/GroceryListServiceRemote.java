@@ -10,11 +10,17 @@ import it.unitn.dsantoro.a9.model.Product;
 
 @Remote
 public interface GroceryListServiceRemote {
-//	void addProduct(Product product);
-//	void removeProduct(String id);	
+	// List
 	GroceryList addGroceryList(String listName);
 	boolean delGroceryList(Long listId);
 	GroceryList findGroceryList(Long listId);
-	Collection<GroceryList> findAllGroceryLists();
-	Collection<Product> findAllProducts();	
+	Collection<GroceryList> findAllGroceryLists();	
+	
+	// Product
+	Collection<Product> findAllProducts(Long listId);
+	Product addProduct(Product product, Long listId);
+	boolean delProduct(Long prodId);
+	Product findProduct(Long prodId);
+	Product updateProduct(Long prodId, String prodName, int prodQuantity, double pricePerUnit);
+	boolean delProductFromCart(Long prodId);
 }

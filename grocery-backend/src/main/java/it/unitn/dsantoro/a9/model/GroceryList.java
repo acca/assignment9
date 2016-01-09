@@ -26,6 +26,12 @@ public class GroceryList implements Serializable {
 		super();
 		products = new ArrayList<Product> ();		
 	}
+	
+	public GroceryList(String listName) {
+		super();
+		this.name = listName;
+		products = new ArrayList<Product> ();		
+	}
 
 	public String getName() {
 		return name;

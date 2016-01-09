@@ -17,7 +17,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	private String name;
-	private int quantity;
+	private int quantity = 1;
 	private double pricePerUnit;
 	private boolean inList = true;	
 	
@@ -27,6 +27,10 @@ public class Product implements Serializable {
 	
 	public Product() {
 		super();		
+	}
+	
+	public Product(String productName){
+		this.name = productName;
 	}
 
 	public Long getId() {
