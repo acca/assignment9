@@ -13,8 +13,8 @@ public interface GroceryListServiceRemote {
 	// List
 	GroceryList addGroceryList(String listName);
 	boolean delGroceryList(Long listId);
-	GroceryList findGroceryList(Long listId);
-	Collection<GroceryList> findAllGroceryLists();	
+	GroceryList findGroceryList(Long listId);	
+	Collection<GroceryList> findMyGroceryLists();
 	
 	// Product
 	Collection<Product> findAllProducts(Long listId);

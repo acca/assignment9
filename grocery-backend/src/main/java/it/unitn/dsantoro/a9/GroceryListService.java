@@ -3,7 +3,6 @@ package it.unitn.dsantoro.a9;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.ejb.PostActivate;
 import javax.ejb.PrePassivate;
@@ -23,15 +22,16 @@ import it.unitn.dsantoro.a9.model.Product;
 public class GroceryListService implements GroceryListServiceRemote {
 	@PersistenceContext(unitName = "grocery-backend", type = PersistenceContextType.EXTENDED) EntityManager entityManager;
 	
-	ArrayList<GroceryList> groceryList;
+	ArrayList<GroceryList> groceryLists;
 	
     public GroceryListService() {
-    	groceryList = new ArrayList<GroceryList>(); 
+    	groceryLists = new ArrayList<GroceryList>(); 
     }
 	@Override
 	public GroceryList addGroceryList(String listName) {
 		GroceryList groceryList = new GroceryList();
 		groceryList.setName(listName);
+		groceryLists.add(groceryList);
 		entityManager.persist(groceryList);
 		return groceryList;
 	}
@@ -40,14 +40,18 @@ public class GroceryListService implements GroceryListServiceRemote {
 		boolean removed = false;
 		GroceryList groceryList = findGroceryList(listId);
 		if (groceryList != null) {
+				delListFromSession(listId);
 				entityManager.remove(groceryList);
 				removed = true;
 		}
 		return removed;
 	}
-	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<GroceryList> findAllGroceryLists() {
+	public Collection<GroceryList> findMyGroceryLists() {
+		return groceryLists;
+	}
+	@SuppressWarnings("unchecked")	
+	private Collection<GroceryList> findAllGroceryLists() {
 		Query query = entityManager.createQuery("SELECT l FROM GroceryList l");
 		return (Collection<GroceryList>) query.getResultList();
 	}
@@ -109,5 +113,14 @@ public class GroceryListService implements GroceryListServiceRemote {
 	    // ...
 
 	    System.out.println("Activating EJB.");
+	}
+	
+	private void delListFromSession(Long listId) {		
+		Iterator<GroceryList> i = groceryLists.iterator(); 
+		while (i.hasNext()){
+			if (i.next().getId() == listId) {
+				i.remove();
+			}
+		}
 	}
 }

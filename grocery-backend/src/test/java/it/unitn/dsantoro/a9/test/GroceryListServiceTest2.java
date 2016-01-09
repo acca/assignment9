@@ -19,7 +19,7 @@ import it.unitn.dsantoro.a9.GroceryListServiceRemote;
 import it.unitn.dsantoro.a9.model.GroceryList;
 import it.unitn.dsantoro.a9.model.Product;
 
-public class GroceryListServiceTest {
+public class GroceryListServiceTest2 {
 	
 	static GroceryListServiceRemote gList;
 	static InitialContext initialContext; 

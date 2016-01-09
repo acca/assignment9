@@ -38,8 +38,7 @@ public class GroceryListDBTest {
 		entityManager.persist(gl);
 		//entityManager.persist( new Event( "A follow up event", new Date() ) );
 		entityManager.getTransaction().commit();
-		entityManager.close();
-		
+		//entityManager.close();
 	}
 	
 	@Test
