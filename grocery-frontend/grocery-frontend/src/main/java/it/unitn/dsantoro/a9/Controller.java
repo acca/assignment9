@@ -62,6 +62,15 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println(request);
+		
+		System.out.println(request.getParameter("listName"));
+		
+		if( (request.getParameter("listName") != null) ) {
+			gListService.addGroceryList(request.getParameter("listName"));
+			response.sendRedirect(request.getHeader("referer"));
+		}		
+		
 		Collection<GroceryList> gLists = gListService.findMyGroceryLists();
 		if (gLists != null) {
 			request.setAttribute("userLists", gLists);	
@@ -72,11 +81,16 @@ public class Controller extends HttpServlet {
 		
 	}
 
+	
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		
+		
 		doGet(request, response);
 	}
 
