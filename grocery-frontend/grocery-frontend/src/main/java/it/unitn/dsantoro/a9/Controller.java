@@ -10,6 +10,7 @@ import java.util.Queue;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -79,7 +80,9 @@ public class Controller extends HttpServlet {
 	private void initializeServlet() {
 		allowedOperations.add("showDashboard");
 		allowedOperations.add("addList");
-		allowedOperations.add("deleteList");		
+		allowedOperations.add("deleteList");
+		allowedOperations.add("showList");
+		allowedOperations.add("showProduct");
 	}
 
 	
@@ -114,36 +117,6 @@ public class Controller extends HttpServlet {
 		request.setAttribute(MSG_ATTR, msgQueue); 		
 	}
 	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		String operation = request.getParameter("op");
-    	//String json = "";
-    	//PrintWriter out = response.getWriter();
-
-    	if (allowedOperations.contains(operation)) {    		
-    		switch (operation) {
-    		case "showDashboard":
-    			showDashboard(request,response);	
-    			break;
-    		case "addList":
-				addList(request,response);
-    			break;
-    		case "deleteList":
-				deleteList(request,response);
-    			break;
-    		default:
-    			throw new ServletException("Invalid URI");
-    		}
-    	}
-    	else {
-    		throw new ServletException("Invalid URI");
-    	}	
-	}
-
-	
-	
 	private void deleteList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String listId = request.getParameter("listId");		
 		if ( listId != null ) {
@@ -156,6 +129,66 @@ public class Controller extends HttpServlet {
 			}		
 		}
 		response.sendRedirect(request.getHeader("referer"));		
+	}
+	
+	private void showList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		GroceryList list = null;
+		String listId = request.getParameter("listId");		
+		if ( listId != null ) {
+			if (!listId.isEmpty()) {
+				list = gListService.findGroceryList(Long.parseLong(listId));
+				if (list != null) {
+					message(request, Message.INFO, "Showing "+list.getProducts().size()+" products from " + list.getName());
+					if (list.getProducts().size() == 0) { 
+						message(request, Message.WARNING, "No product present, please create one");
+					}
+					else {
+						message(request, Message.INFO, "Retrieved "+ list.getProducts().size() + " products");
+					}
+				}
+				else {
+					message(request, Message.ERROR, "Not found list with id: " + listId);
+				}
+			}
+			else {
+				message(request, Message.ERROR, "List id not present");
+			}
+		}
+		else {
+			message(request, Message.ERROR, "List id not present");
+		}
+		request.setAttribute("list", list);
+		response.sendRedirect(request.getHeader("referer"));
+	}
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+		String operation = request.getParameter("op");
+		//String json = "";
+		//PrintWriter out = response.getWriter();
+	
+		if (allowedOperations.contains(operation)) {    		
+			switch (operation) {
+			case "showDashboard":
+				showDashboard(request,response);	
+				break;
+			case "addList":
+				addList(request,response);
+				break;
+			case "deleteList":
+				deleteList(request,response);
+				break;
+			case "showList":
+				showList(request,response);
+				break;
+			default:
+				throw new ServletException("Invalid URI");
+			}
+		}
+		else {
+			throw new ServletException("Invalid URI");
+		}	
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

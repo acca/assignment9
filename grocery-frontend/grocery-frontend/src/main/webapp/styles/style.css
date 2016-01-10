@@ -30,3 +30,19 @@ a.button {
 .rowOperation {
 	
 }
+
+.info { 
+	background-color: #8FBC8F;
+}
+
+.warning { 
+	background-color: #FFFACD;
+}
+
+.error { 
+	background-color: #F08080;
+}
+
+#menu div {
+	display: inline-block;
+}

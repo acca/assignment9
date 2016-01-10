@@ -49,13 +49,13 @@
 			%>
 			<div class="row">
 				<div class="cell">
-					<a href="list.jsp">
+					<a href="list.jsp?listId=<%=list.getId()%>">
 						<div class="rowDetails"><%=list.toString()%></div>
 					</a>
 				</div>
 				<div class="cell">
 					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
-						<div class="rawOperation">Delete</div>
+						<div class="rawOperation"><button>Delete</button></div>
 					</a>
 				</div>
 			</div>
