@@ -18,8 +18,43 @@
 		//response.sendRedirect(request.getContextPath() + "/Controller?op=getUserLists");
 	%>
 
+	<div id="menu">
+		<form method="post" action="Controller?op=addList">
+			<input name="listName" type="text" autofocus></input>
+			<input type="submit" value="Create the list"></input>
+		</form>
+	</div>
 
-	<div id="error">
+	<div id="body">
+		<div class="table">
+			<%
+				ArrayList<GroceryList> userLists = (ArrayList<GroceryList>) request.getAttribute("userLists");
+				Iterator<GroceryList> li = userLists.iterator();				
+				while (li.hasNext()) {
+					GroceryList list = li.next();
+			%>
+			<div class="row">
+				<div class="cell details">
+					<a href="list.jsp?listId=<%=list.getId()%>">
+						<div><%=list.toString()%></div>
+					</a>
+				</div>
+				<div class="cell operations">
+					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
+						
+							<button>Delete</button>
+						
+					</a>
+				</div>
+			</div>
+
+			<%
+				}
+			%>
+		</div>
+	</div>
+	<div id="messages">
+	<p>Latests operations:</p>
 		<%
 			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
 			Iterator<Message> mi = msgQueue.iterator();
@@ -31,41 +66,6 @@
 			}
 		%>
 	</div>
-
-	<div id="menu">
-		<form method="post" action="Controller?op=addList">
-			<input name="listName" type="text"></input> <input type="submit"
-				value="Create the list"></input>
-		</form>
-	</div>
-
-	<div id="body">
-	<div class="table">
-		<%
-				ArrayList<GroceryList> userLists = (ArrayList<GroceryList>) request.getAttribute("userLists");
-				Iterator<GroceryList> li = userLists.iterator();
-				while ( li.hasNext() ) {
-					GroceryList list = li.next();
-			%>
-			<div class="row">
-				<div class="cell">
-					<a href="list.jsp?listId=<%=list.getId()%>">
-						<div class="rowDetails"><%=list.toString()%></div>
-					</a>
-				</div>
-				<div class="cell">
-					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
-						<div class="rawOperation"><button>Delete</button></div>
-					</a>
-				</div>
-			</div>
-		
-		<%
-				}
-			%>
-		</div>
-	</div>
-
 	<div id="footer"></div>
 </body>
 </html>

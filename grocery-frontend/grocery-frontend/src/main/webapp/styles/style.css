@@ -10,18 +10,20 @@ a.button {
 .table {
 	display: table;
 	width: 100%;
+	border-spacing: 10px;
 }
 
 .row {
-	display: table-row;
-	margin: 20px;
+	display: table-row;	
 }
 
 .cell {
 	display: table-cell;
 	padding: 15px;
+}
+
+div.cell.details {	
 	border: solid 1px black;
-	margin: 10px;
 }
 
 .rowDetails {
@@ -40,9 +42,14 @@ a.button {
 }
 
 .error { 
-	background-color: #F08080;
+	background-color: #F08080;	
 }
 
 #menu div {
 	display: inline-block;
+}
+
+#messages {
+	overflow-y: auto;
+	height: 300px;
 }

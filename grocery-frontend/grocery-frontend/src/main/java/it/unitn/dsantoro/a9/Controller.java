@@ -2,8 +2,12 @@ package it.unitn.dsantoro.a9;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
 
@@ -15,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.catalina.connector.Request;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -22,6 +27,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 import it.unitn.dsantoro.a9.GroceryListService;
 import it.unitn.dsantoro.a9.GroceryListServiceRemote;
 import it.unitn.dsantoro.a9.model.GroceryList;
+import it.unitn.dsantoro.a9.model.Product;
 
 /**
  * Servlet implementation class Controller
@@ -32,8 +38,7 @@ public class Controller extends HttpServlet {
 	private GroceryListServiceRemote gListService;
 	private HashSet<String> allowedOperations = new HashSet<String>();
 	private static String MSG_ATTR = "msg";
-	Queue<Message> msgQueue = new CircularFifoQueue<Message>(3);
-	
+	private HashMap<HttpSession,GroceryListServiceRemote> users = null;	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -45,14 +50,14 @@ public class Controller extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		
+		if (users == null) users = new HashMap<HttpSession,GroceryListServiceRemote>();
 		initializeServlet();
 		
-		initializeRemoteService();
+		//initializeRemoteService();
 	}
 		
-	private void initializeRemoteService() {		
-		System.out.println("Connecting to the remote list service...");		
+	private void initializeRemoteService(HttpSession userSession) {		
+		System.out.println("Connecting with session: "+userSession+" to the remote list service...");		
         Properties jndiProps = new Properties();
         jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
         jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
@@ -70,11 +75,11 @@ public class Controller extends HttpServlet {
         try {
 			initialContext = new InitialContext(jndiProps);
 			gListService = (GroceryListServiceRemote) initialContext.lookup("java:grocery-backend/GroceryListService!it.unitn.dsantoro.a9.GroceryListServiceRemote");
-			System.out.println("Succesfully connected.");
+			System.out.println("Succesfully connected.");			
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}        
 	}
 	
 	private void initializeServlet() {
@@ -83,6 +88,8 @@ public class Controller extends HttpServlet {
 		allowedOperations.add("deleteList");
 		allowedOperations.add("showList");
 		allowedOperations.add("showProduct");
+		allowedOperations.add("addProduct");		
+		
 	}
 
 	
@@ -113,8 +120,14 @@ public class Controller extends HttpServlet {
 	}	
 	
 	private void message(HttpServletRequest request, String messageSeverity, String text) {
-		msgQueue.add(new Message(messageSeverity, text));
-		request.setAttribute(MSG_ATTR, msgQueue); 		
+		ArrayDeque<Message> msgQueue;
+		msgQueue = (ArrayDeque<Message>) request.getSession(true).getAttribute("msgQueue");
+		if (msgQueue == null) {
+			msgQueue = new ArrayDeque<Message>();
+			request.getSession(true).setAttribute("msgQueue", msgQueue);
+		}
+		msgQueue.addFirst(new Message(messageSeverity, text));		
+		request.setAttribute(MSG_ATTR, msgQueue);
 	}
 	
 	private void deleteList(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -132,14 +145,16 @@ public class Controller extends HttpServlet {
 	}
 	
 	private void showList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		GroceryList list = null;
+		GroceryList list = (GroceryList) request.getSession(true).getAttribute("currentList");
+		System.out.println(list);
 		String listId = request.getParameter("listId");		
 		if ( listId != null ) {
 			if (!listId.isEmpty()) {
 				list = gListService.findGroceryList(Long.parseLong(listId));
 				if (list != null) {
 					message(request, Message.INFO, "Showing "+list.getProducts().size()+" products from " + list.getName());
-					if (list.getProducts().size() == 0) { 
+					request.getSession(true).setAttribute("currentList", list);
+					if (list.getProducts().size() == 0) {
 						message(request, Message.WARNING, "No product present, please create one");
 					}
 					else {
@@ -157,13 +172,32 @@ public class Controller extends HttpServlet {
 		else {
 			message(request, Message.ERROR, "List id not present");
 		}
-		request.setAttribute("list", list);
+		request.setAttribute("list", list);		
 		response.sendRedirect(request.getHeader("referer"));
 	}
+	
+	private void addProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String productName = request.getParameter("productName");
+		if ( productName != null ) {
+			if (!productName.isEmpty()) {
+				GroceryList list = (GroceryList) request.getSession(true).getAttribute("currentList");
+				gListService.addProduct(new Product(productName), list.getId());				
+				message(request, Message.INFO, "Product "+ productName +" has been created in "+list.getName()+" list.");
+			} 
+			else {				
+				message(request, Message.ERROR, "Product name must be present");
+			}		
+		}
+		response.sendRedirect(request.getHeader("referer"));
+	}
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		checkUser(session);
+		
 		String operation = request.getParameter("op");
 		//String json = "";
 		//PrintWriter out = response.getWriter();
@@ -182,6 +216,9 @@ public class Controller extends HttpServlet {
 			case "showList":
 				showList(request,response);
 				break;
+			case "addProduct":
+				addProduct(request, response);
+				break;
 			default:
 				throw new ServletException("Invalid URI");
 			}
@@ -189,6 +226,16 @@ public class Controller extends HttpServlet {
 		else {
 			throw new ServletException("Invalid URI");
 		}	
+	}
+	private void checkUser(HttpSession userSession) {
+		if (users.containsKey(userSession) ) {
+			this.gListService = users.get(userSession);
+		}
+		else {
+			initializeRemoteService(userSession);
+			//this.hangman = new Hangman();
+			users.put(userSession, gListService);
+		}
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
