@@ -1,5 +1,5 @@
 <%@page import="it.unitn.dsantoro.a9.Message"%>
-<%@ page import="java.util.*, it.unitn.dsantoro.a9.model.*"
+<%@page import="java.util.*, it.unitn.dsantoro.a9.model.*"
 	language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -16,48 +16,56 @@
 	</jsp:include>
 	<%
 		//response.sendRedirect(request.getContextPath() + "/Controller?op=getUserLists");
-		ArrayList<GroceryList> s = (ArrayList<GroceryList>) request.getAttribute("userLists");
 	%>
 
 
 	<div id="error">
-	<%
-		Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
-		Iterator<Message> mi = msgQueue.iterator();
-		while (mi.hasNext()) {
-			Message msg = mi.next();
-	%>
-	<%=msg.toString()%>
-	<%
-		}
-	%>
+		<%
+			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
+			Iterator<Message> mi = msgQueue.iterator();
+			while (mi.hasNext()) {
+				Message msg = mi.next();
+		%>
+		<%=msg.toString()%>
+		<%
+			}
+		%>
 	</div>
 
-	<jsp:element name="div" id="menu">
+	<div id="menu">
 		<form method="post" action="Controller?op=addList">
-		<input name="listName" type="text"></input>
-		<input type="submit" value="Create the list"></input>	
+			<input name="listName" type="text"></input> <input type="submit"
+				value="Create the list"></input>
 		</form>
-	</jsp:element>
+	</div>
 
 	<div id="body">
-		<table>
-			<tr>
-				<th>List id</th>
-				<th>List name</th>
-				<th>Products</th>
-				<th>Operations</th>
-			</tr>
-		</table>
-		<%=s%>
+	<div class="table">
+		<%
+				ArrayList<GroceryList> userLists = (ArrayList<GroceryList>) request.getAttribute("userLists");
+				Iterator<GroceryList> li = userLists.iterator();
+				while ( li.hasNext() ) {
+					GroceryList list = li.next();
+			%>
+			<div class="row">
+				<div class="cell">
+					<a href="list.jsp">
+						<div class="rowDetails"><%=list.toString()%></div>
+					</a>
+				</div>
+				<div class="cell">
+					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
+						<div class="rawOperation">Delete</div>
+					</a>
+				</div>
+			</div>
+		
+		<%
+				}
+			%>
+		</div>
 	</div>
 
-	<jsp:element name="div" id="footer"></jsp:element>
-
-
-
-
-
-
+	<div id="footer"></div>
 </body>
 </html>

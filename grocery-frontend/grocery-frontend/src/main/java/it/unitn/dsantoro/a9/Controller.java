@@ -79,7 +79,7 @@ public class Controller extends HttpServlet {
 	private void initializeServlet() {
 		allowedOperations.add("showDashboard");
 		allowedOperations.add("addList");
-		allowedOperations.add("status");		
+		allowedOperations.add("deleteList");		
 	}
 
 	
@@ -100,13 +100,12 @@ public class Controller extends HttpServlet {
 	private void showDashboard(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Collection<GroceryList> gLists = gListService.findMyGroceryLists();
 		if (!gLists.isEmpty()) {
-			request.setAttribute("userLists", gLists);
-			System.out.println(gLists);
 			message(request, Message.INFO, "Retrieved "+ gLists.size() +" lists");			
 		}
 		else {
 			message(request, Message.WARNING, "No grocery-list present, please create one.");			
 		}
+		request.setAttribute("userLists", gLists);
 		response.sendRedirect(request.getHeader("referer"));
 	}	
 	
@@ -127,18 +126,13 @@ public class Controller extends HttpServlet {
     		switch (operation) {
     		case "showDashboard":
     			showDashboard(request,response);	
-//    			json = uploadJsonResponse(uploadRqst());
-//    			response.setContentType("application/json");
-//    			out = response.getWriter();			    
-//    			out.print(json);  			
     			break;
     		case "addList":
 				addList(request,response);
-//    			json = downloadJsonResponse(downloadRqst());		
-//    			response.setContentType("application/json");
-//    			out = response.getWriter();			    
-//    			out.print(json);
-    			break;    		
+    			break;
+    		case "deleteList":
+				deleteList(request,response);
+    			break;
     		default:
     			throw new ServletException("Invalid URI");
     		}
@@ -150,6 +144,19 @@ public class Controller extends HttpServlet {
 
 	
 	
+	private void deleteList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String listId = request.getParameter("listId");		
+		if ( listId != null ) {
+			if (!listId.isEmpty()) {
+				gListService.delGroceryList(Long.parseLong(listId));
+				message(request, Message.INFO, "List "+ listId +" has been deleted.");
+			} 
+			else {				
+				message(request, Message.ERROR, "List id must be present");
+			}		
+		}
+		response.sendRedirect(request.getHeader("referer"));		
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

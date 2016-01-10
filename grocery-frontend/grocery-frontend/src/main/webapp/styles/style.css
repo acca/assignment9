@@ -6,3 +6,27 @@ a.button {
     text-decoration: none;
     color: initial;
 }
+
+.table {
+	display: table;
+	width: 100%;
+}
+
+.row {
+	display: table-row;
+	margin: 20px;
+}
+
+.cell {
+	display: table-cell;
+	padding: 15px;
+	border: solid 1px black;
+	margin: 10px;
+}
+
+.rowDetails {
+}
+
+.rowOperation {
+	
+}
