@@ -1,3 +1,7 @@
+html {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+}
+
 a.button {
     -webkit-appearance: button;
     -moz-appearance: button;
@@ -24,7 +28,7 @@ a.button {
 
 div.cell.details {	
 	border: solid 1px black;
-	border-radius: 15px;
+	border-radius: 10px;
 }
 
 .rowDetails {
@@ -53,4 +57,19 @@ div.cell.details {
 #logs {
 	overflow-y: auto;
 	height: 300px;
+}
+
+#body button { 
+	font-size: large;
+}
+
+.detail { 
+	font-style: italic;
+	font-size: small;
+}
+
+.name {
+	font-size: large;
+	font-weight: bold;
+	text-transform: capitalize;
 }

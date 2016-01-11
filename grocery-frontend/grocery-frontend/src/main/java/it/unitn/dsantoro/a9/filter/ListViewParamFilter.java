@@ -34,7 +34,7 @@ public class ListViewParamFilter implements Filter {
 					msgQueue = new ArrayDeque<Message>();
 					httpRequest.getSession(true).setAttribute("msgQueue", msgQueue);						
 				}
-				msgQueue.addFirst(new Message(Message.ERROR, "Filter redirect: from list.jsp to home.jsp, Cause: listId not present."));						
+				msgQueue.addFirst(new Message(Message.ERROR, "Filter redirect: from list.jsp to home.jsp, see logs for details"));						
 				HttpServletResponse httpResponse = (HttpServletResponse) response;
 				httpResponse.sendRedirect("home.jsp");
 			}

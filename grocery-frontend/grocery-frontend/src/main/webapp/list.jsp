@@ -39,46 +39,93 @@
 			<p>
 				Operating on list: <b><%=list.getName()%></b>
 			</p>
-			<%
-				Iterator<Product> pi = list.getProducts().iterator();
-				while (pi.hasNext()) {
-					Product prod = pi.next();
-			%>
+			<div id=#list>
+				<%
+					Iterator<Product> pi = list.getProducts(true).iterator();
+					while (pi.hasNext()) {
+						Product prod = pi.next();
+				%>
+				<div class="row">
+					<div class="cell details">
+
+						<div class="name">
+							<a href="product.jsp?prodId=<%=prod.getId()%>"> <%=prod.getName()%>
+						</div>
+						</a>
+						<div class="detail">
+							Id:
+							<%=prod.getId()%>, Quantity:
+							<%=prod.getQuantity()%>, Price:
+							<%=prod.getPricePerUnit()%></div>
+					</div>
+					<div class="cell operations">
+						<a href="Controller?op=deleteProd&prodId=<%=prod.getId()%>">
+							<button>Delete</button>
+						</a> <a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
+
+							<button>In cart</button>
+						</a>
+						<a href="Controller?op=incProd&prodId=<%=prod.getId()%>">
+						<button>Increase</button>
+						</a>
+						<a href="Controller?op=decProd&prodId=<%=prod.getId()%>">
+						<button>Decrease</button>
+						</a>
+						</a>
+					</div>
+				</div>
+
+				<%
+					}
+				%>
+			</div>
+			<details id=#cart open> <summary> Product in my
+			cart </summary> <%
+ 	pi = list.getProducts(false).iterator();
+ 	while (pi.hasNext()) {
+ 		Product prod = pi.next();
+ 				%>
 			<div class="row">
 				<div class="cell details">
-					<a href="product.jsp?prodId=<%=prod.getId()%>">
-						<div><%=prod.toString()%></div>
+
+					<div class="name">
+						<a href="product.jsp?prodId=<%=prod.getId()%>"> <%=prod.getName()%>
+					</div>
 					</a>
+					<div class="detail">
+						Id:
+						<%=prod.getId()%>, Quantity:
+						<%=prod.getQuantity()%>, Price:
+						<%=prod.getPricePerUnit()%></div>
 				</div>
 				<div class="cell operations">
 					<a href="Controller?op=deleteProd&prodId=<%=prod.getId()%>">
-
-						<button>Delete</button>
-
+						<button>Delete</button> <a
+						href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
+							<button>In list</button>
+					</a>
 					</a>
 				</div>
 			</div>
-
 			<%
 				}
-			%>
+			%> </details>
 		</div>
-	</div>
-	<div id="messages">
-		<p>Latests operations:</p>
-		<div id="logs">
-		<%
-			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
-			Iterator<Message> mi = msgQueue.iterator();
-			while (mi.hasNext()) {
-				Message msg = mi.next();
-		%>
-		<%=msg.toString()%>
-		<%
-			}
-		%>
+		<div id="messages">
+			<p>Latests operations:</p>
+			<div id="logs">
+				<%
+					Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
+					Iterator<Message> mi = msgQueue.iterator();
+					while (mi.hasNext()) {
+						Message msg = mi.next();
+				%>
+				<%=msg.toString()%>
+				<%
+					}
+				%>
+			</div>
 		</div>
-	</div>
-	<div id="footer"></div>
+		<div id="footer"></div>
 </body>
 </html>

@@ -46,9 +46,7 @@
 				</div>
 				<div class="cell operations">
 					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
-
 						<button>Delete</button>
-
 					</a>
 				</div>
 			</div>

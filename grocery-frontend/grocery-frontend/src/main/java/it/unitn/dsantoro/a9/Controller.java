@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.connector.Request;
+
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import it.unitn.dsantoro.a9.GroceryListService;
@@ -88,8 +88,11 @@ public class Controller extends HttpServlet {
 		allowedOperations.add("deleteList");
 		allowedOperations.add("showList");
 		allowedOperations.add("showProduct");
-		allowedOperations.add("addProduct");		
-		
+		allowedOperations.add("addProduct");
+		allowedOperations.add("changeStatus");
+		allowedOperations.add("deleteProduct");
+		allowedOperations.add("decProd");
+		allowedOperations.add("incProd");
 	}
 
 	
@@ -146,7 +149,8 @@ public class Controller extends HttpServlet {
 	private void showList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		GroceryList list = (GroceryList) request.getSession(true).getAttribute("currentList");
 
-		String listId = request.getParameter("listId");		
+		String listId = request.getParameter("listId");
+		boolean error = false;
 
 		list = gListService.findGroceryList(Long.parseLong(listId));
 		if (list != null) {
@@ -162,9 +166,16 @@ public class Controller extends HttpServlet {
 		}
 		else {
 			message(request, Message.ERROR, "Not found list with id: " + listId);
-		}		
-		request.setAttribute("list", list);		
-		response.sendRedirect(request.getHeader("referer"));
+			error = true;			
+		}
+		if (error) { 
+			response.sendRedirect("home.jsp");
+		}
+		else {
+			request.setAttribute("list", list);
+			response.sendRedirect(request.getHeader("referer"));	
+		}
+		
 	}
 	
 	private void addProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -209,6 +220,18 @@ public class Controller extends HttpServlet {
 				break;
 			case "addProduct":
 				addProduct(request, response);
+				break;				
+			case "deleteProduct":
+				deleteProduct(request, response);
+				break;
+			case "changeStatus":
+				changeStatusProduct(request, response);
+				break;
+			case "incProd":
+				incProduct(request, response);
+				break;
+			case "decProd":
+				decProduct(request, response);
 				break;
 			default:
 				throw new ServletException("Invalid URI");
@@ -217,6 +240,78 @@ public class Controller extends HttpServlet {
 		else {
 			throw new ServletException("Invalid URI");
 		}	
+	}
+	private void decProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String prodId = request.getParameter("prodId");
+		if ( prodId != null ) {
+			if (!prodId.isEmpty()) {
+				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
+				Product p = gl.getProduct(Long.parseLong(prodId));
+				int q = p.getQuantity();
+				if (q > 0) {					
+					p.setQuantity(q - 1);
+					gListService.updateProduct(p);
+					message(request, Message.INFO, "Prod "+ prodId +" quantity has been decreased from " + q + " to " + (q-1) + ".");
+				}
+				else {
+					message(request, Message.WARNING, "Minimum quantity is 1");	
+				}
+		}
+			else {
+				message(request, Message.ERROR, "Prod id must be present");
+			}
+		response.sendRedirect(request.getHeader("referer"));
+	}
+	}
+	private void incProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String prodId = request.getParameter("prodId");
+		if ( prodId != null ) {
+			if (!prodId.isEmpty()) {
+				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
+				Product p = gl.getProduct(Long.parseLong(prodId));
+				int q = p.getQuantity();
+				if (q < 5) {
+					p.setQuantity(q + 1);
+					gListService.updateProduct(p);
+					message(request, Message.INFO, "Prod "+ prodId +" quantity has been increased from " + q + " to " + (q+1) + ".");
+				}
+				else {
+					message(request, Message.WARNING, "Maximum quantity is 5");	
+				}
+		}
+			else {
+				message(request, Message.ERROR, "Prod id must be present");
+			}
+		response.sendRedirect(request.getHeader("referer"));
+	}	
+	}
+	private void changeStatusProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String prodId = request.getParameter("prodId");
+		if ( prodId != null ) {
+			if (!prodId.isEmpty()) {
+				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
+				Product p = gl.getProduct(Long.parseLong(prodId));
+				String newStatus = "";
+				if (p.isInList()) {
+					gListService.markProductAsBought(p.getId(), gl.getId());
+					newStatus = "cart";
+				}
+				else {
+					gListService.markProductToBuy(p.getId(), gl.getId());
+					newStatus = "list";
+				}
+
+				message(request, Message.INFO, "Prod "+ prodId +" has been moved to " + newStatus + ".");
+			} 
+			else {
+				message(request, Message.ERROR, "Prod id must be present");
+			}
+		}
+		response.sendRedirect(request.getHeader("referer"));
+	}
+	private void deleteProduct(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
 	}
 	private void checkUser(HttpSession userSession) {
 		if (users.containsKey(userSession) ) {

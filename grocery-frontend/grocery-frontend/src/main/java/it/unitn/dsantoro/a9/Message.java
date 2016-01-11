@@ -1,8 +1,15 @@
 package it.unitn.dsantoro.a9;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Message {
+public class Message implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6210633770635712660L;
+	
 	private String text;
 	private String severity;
 	private Date date;
