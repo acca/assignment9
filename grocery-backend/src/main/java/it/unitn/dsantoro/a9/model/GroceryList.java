@@ -74,9 +74,11 @@ public class GroceryList implements Serializable {
 	
 	public Long delProduct(Long productId) {
 		Long delId = null;
-		while (products.iterator().hasNext()) {
-			if (products.iterator().next().getId() == productId) {
-				products.iterator().remove();
+		Iterator<Product> pi = products.iterator();
+		while (pi.hasNext()) {
+			Product p = pi.next();
+			if (p.getId() == productId) {
+				pi.remove();
 				delId = productId;
 			}			
 		}
