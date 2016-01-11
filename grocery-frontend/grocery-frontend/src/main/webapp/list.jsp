@@ -26,6 +26,9 @@
 		<div>
 			<a href="home.jsp"><button>Dashboard</button></a>
 		</div>
+		<div>
+			<a href="home.jsp" onClick="alert('Not yet implemented');"><button>Logout</button></a>
+		</div>
 	</div>
 
 	<div id="body">

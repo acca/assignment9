@@ -19,10 +19,15 @@
 	%>
 
 	<div id="menu">
-		<form method="post" action="Controller?op=addList">
-			<input name="listName" type="text" autofocus></input>
-			<input type="submit" value="Create the list"></input>
-		</form>
+		<div>
+			<form method="post" action="Controller?op=addList">
+				<input name="listName" type="text" autofocus></input>
+				<input type="submit" value="Create the list"></input>
+			</form>
+		</div>
+		<div>
+			<a href="home.jsp" onClick="alert('Not yet implemented');"><button>Logout</button></a>
+		</div>
 	</div>
 
 	<div id="body">
@@ -41,9 +46,9 @@
 				</div>
 				<div class="cell operations">
 					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
-						
-							<button>Delete</button>
-						
+
+						<button>Delete</button>
+
 					</a>
 				</div>
 			</div>
@@ -54,7 +59,7 @@
 		</div>
 	</div>
 	<div id="messages">
-	<p>Latests operations:</p>
+		<p>Latests operations:</p>
 		<%
 			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
 			Iterator<Message> mi = msgQueue.iterator();

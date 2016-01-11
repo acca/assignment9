@@ -5,12 +5,12 @@
 <web-app>
 	<display-name>Archetype Created Web Application</display-name>
 	<filter>
-		<filter-name>filter1</filter-name>
-		<filter-class>it.unitn.dsantoro.a9.filter.Filter1</filter-class>
+		<filter-name>ListViewParamFilter</filter-name>
+		<filter-class>it.unitn.dsantoro.a9.filter.ListViewParamFilter</filter-class>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>filter1</filter-name>
+		<filter-name>ListViewParamFilter</filter-name>
 		<url-pattern>/list.jsp</url-pattern>
 	</filter-mapping>
 	<servlet>

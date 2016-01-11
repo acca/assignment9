@@ -57,7 +57,7 @@ public class Controller extends HttpServlet {
 	}
 		
 	private void initializeRemoteService(HttpSession userSession) {		
-		System.out.println("Connecting with session: "+userSession+" to the remote list service...");		
+		System.out.println("Connecting with session id: "+userSession.getId()+" to the remote list service...");		
         Properties jndiProps = new Properties();
         jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
         jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
@@ -145,32 +145,24 @@ public class Controller extends HttpServlet {
 	
 	private void showList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		GroceryList list = (GroceryList) request.getSession(true).getAttribute("currentList");
-		System.out.println(list);
+
 		String listId = request.getParameter("listId");		
-		if ( listId != null ) {
-			if (!listId.isEmpty()) {
-				list = gListService.findGroceryList(Long.parseLong(listId));
-				if (list != null) {
-					message(request, Message.INFO, "Showing "+list.getProducts().size()+" products from " + list.getName());
-					request.getSession(true).setAttribute("currentList", list);
-					if (list.getProducts().size() == 0) {
-						message(request, Message.WARNING, "No product present, please create one");
-					}
-					else {
-						message(request, Message.INFO, "Retrieved "+ list.getProducts().size() + " products");
-					}
-				}
-				else {
-					message(request, Message.ERROR, "Not found list with id: " + listId);
-				}
+
+		list = gListService.findGroceryList(Long.parseLong(listId));
+		if (list != null) {
+
+			message(request, Message.INFO, "Showing "+list.getProducts().size()+" products from " + list.getName());
+			request.getSession(true).setAttribute("currentList", list);
+			if (list.getProducts().size() == 0) {
+				message(request, Message.WARNING, "No product present, please create one");
 			}
 			else {
-				message(request, Message.ERROR, "List id not present");
+				message(request, Message.INFO, "Retrieved "+ list.getProducts().size() + " products");
 			}
 		}
 		else {
-			message(request, Message.ERROR, "List id not present");
-		}
+			message(request, Message.ERROR, "Not found list with id: " + listId);
+		}		
 		request.setAttribute("list", list);		
 		response.sendRedirect(request.getHeader("referer"));
 	}
