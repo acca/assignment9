@@ -119,9 +119,8 @@ public class Controller extends HttpServlet {
 		response.sendRedirect(request.getHeader("referer"));
 	}	
 	
-	private void message(HttpServletRequest request, String messageSeverity, String text) {
-		ArrayDeque<Message> msgQueue;
-		msgQueue = (ArrayDeque<Message>) request.getSession(true).getAttribute("msgQueue");
+	private void message(HttpServletRequest request, String messageSeverity, String text) {		
+		ArrayDeque<Message> msgQueue = (ArrayDeque<Message>) request.getSession(true).getAttribute("msgQueue");
 		if (msgQueue == null) {
 			msgQueue = new ArrayDeque<Message>();
 			request.getSession(true).setAttribute("msgQueue", msgQueue);
