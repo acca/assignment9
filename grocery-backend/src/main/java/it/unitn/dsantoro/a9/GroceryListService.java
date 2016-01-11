@@ -63,7 +63,7 @@ public class GroceryListService implements GroceryListServiceRemote {
 	@Override
 	public Collection<Product> findAllProducts(Long listId) {
 		GroceryList gl = entityManager.find(GroceryList.class, listId);
-		return gl.getProducts();		
+		return gl.getProducts();
 	}	
 	
 	@Override
@@ -136,5 +136,15 @@ public class GroceryListService implements GroceryListServiceRemote {
 				i.remove();
 			}
 		}
+	}
+	@Override
+	public Product updateProduct(Product product) {
+		GroceryList gl = entityManager.find(GroceryList.class, product.getGroceryList().getId());
+		Product p = gl.getProduct(product.getId());
+		p.setName(product.getName());
+		p.setQuantity(product.getQuantity());
+		p.setPricePerUnit(product.getPricePerUnit());
+		entityManager.persist(gl);
+		return new Product();
 	}
 }

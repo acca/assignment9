@@ -17,11 +17,12 @@ public interface GroceryListServiceRemote {
 	Collection<GroceryList> findMyGroceryLists();
 	
 	// Product
-	Collection<Product> findAllProducts(Long listId);
+	Collection<Product> findAllProducts(Long listId);	
 	Product addProduct(Product product, Long listId);
 	void delProduct(Long prodId, Long listId);
 	Product findProduct(Long prodId, Long listId);
 	Product updateProduct(Long listId, Long prodId, String prodName, int prodQuantity, double pricePerUnit);
+	Product updateProduct(Product product);
 	void markProductAsBought(Long prodId, Long listId);
-	void markProductToBuy(Long prodId, Long listId);		
+	void markProductToBuy(Long prodId, Long listId);	
 }

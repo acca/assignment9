@@ -2,6 +2,7 @@ package it.unitn.dsantoro.a9.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -123,8 +124,18 @@ public class GroceryListServiceTest {
 		}
 		
 		int listSize = gList.findAllProducts(gl.getId()).size();
-		
 		assertTrue(listSize == 5);
+		
+		System.out.println("Testing mark a product out of list");
+		Collection<Product> cp = gl.getProducts();
+		ArrayList<Product> lp = new ArrayList<Product>(cp);
+		lp.get(cp.size()-1).setInList(false);
+		int inList = gl.getProducts(true).size();
+		System.out.println("In list: " + inList);
+		int notInList = gl.getProducts(false).size();
+		System.out.println("Not in list: " + notInList);
+		assertTrue(inList == listSize - 1);
+		assertTrue(notInList == 1);
 	}
 	
 	

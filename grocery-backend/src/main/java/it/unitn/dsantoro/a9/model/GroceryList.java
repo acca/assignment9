@@ -51,6 +51,18 @@ public class GroceryList implements Serializable {
 		return products;
 	}
 	
+	public Collection<Product> getProducts(boolean toBuy) {
+		Collection<Product> products = new ArrayList<Product>();	
+		Iterator<Product> ip = this.products.iterator();
+		while(ip.hasNext()){			
+			Product p = ip.next();			
+			if (toBuy == p.isInList()) {
+				products.add(p);
+			}			
+		}
+		return products;
+	}
+	
 	public void setProducts(Collection<Product> products) {
 		this.products = products;
 	}
