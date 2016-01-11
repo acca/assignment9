@@ -60,6 +60,7 @@
 	</div>
 	<div id="messages">
 		<p>Latests operations:</p>
+		<div id="logs">
 		<%
 			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
 			Iterator<Message> mi = msgQueue.iterator();
@@ -70,6 +71,7 @@
 		<%
 			}
 		%>
+		</div>
 	</div>
 	<div id="footer"></div>
 </body>

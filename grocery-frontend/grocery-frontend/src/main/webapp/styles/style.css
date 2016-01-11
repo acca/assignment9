@@ -50,7 +50,7 @@ div.cell.details {
 	display: inline-block;
 }
 
-#messages {
+#logs {
 	overflow-y: auto;
 	height: 300px;
 }
