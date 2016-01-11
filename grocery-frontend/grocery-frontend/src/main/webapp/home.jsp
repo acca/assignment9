@@ -21,8 +21,8 @@
 	<div id="menu">
 		<div>
 			<form method="post" action="Controller?op=addList">
-				<input name="listName" type="text" autofocus></input>
-				<input type="submit" value="Create the list"></input>
+				<input name="listName" type="text" autofocus></input> <input
+					type="submit" value="Create the list"></input>
 			</form>
 		</div>
 		<div>
@@ -39,10 +39,20 @@
 					GroceryList list = li.next();
 			%>
 			<div class="row">
-				<div class="cell details">
-					<a href="list.jsp?listId=<%=list.getId()%>">
-						<div><%=list.toString()%></div>
-					</a>
+				<div class="cell details" onmouseover="">
+						<a href="list.jsp?listId=<%=list.getId()%>">
+					<div>
+					<div class="name">
+				 <%=list.getName()%>
+						
+					</div>
+					<div class="detail">
+						Id:
+						<%=list.getId()%>, Products:
+						<%=list.getProducts().size()%>
+					</div>
+				</div>
+				</a>
 				</div>
 				<div class="cell operations">
 					<a href="Controller?op=deleteList&listId=<%=list.getId()%>">
@@ -59,14 +69,14 @@
 	<div id="messages">
 		<p>Latests operations:</p>
 		<div id="logs">
-		<%
+			<%
 			Queue<Message> msgQueue = (Queue<Message>) request.getAttribute("msg");
 			Iterator<Message> mi = msgQueue.iterator();
 			while (mi.hasNext()) {
 				Message msg = mi.next();
 		%>
-		<%=msg.toString()%>
-		<%
+			<%=msg.toString()%>
+			<%
 			}
 		%>
 		</div>
