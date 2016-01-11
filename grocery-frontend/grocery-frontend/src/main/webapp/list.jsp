@@ -59,7 +59,7 @@
 							<%=prod.getPricePerUnit()%></div>
 					</div>
 					<div class="cell operations">
-						<a href="Controller?op=deleteProd&prodId=<%=prod.getId()%>">
+						<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
 							<button>Delete</button>
 						</a> <a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
 
@@ -99,7 +99,7 @@
 						<%=prod.getPricePerUnit()%></div>
 				</div>
 				<div class="cell operations">
-					<a href="Controller?op=deleteProd&prodId=<%=prod.getId()%>">
+					<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
 						<button>Delete</button> <a
 						href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
 							<button>In list</button>

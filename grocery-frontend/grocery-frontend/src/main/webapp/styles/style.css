@@ -61,7 +61,14 @@ div.cell.details {
 
 #body button { 
 	font-size: large;
+	height: 50px;
+	width: 150px;	
 }
+
+#body .operations a { 	
+	display: -webkit-inline-box	
+}
+
 
 .detail { 
 	font-style: italic;

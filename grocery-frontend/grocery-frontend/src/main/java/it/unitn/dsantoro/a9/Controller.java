@@ -39,7 +39,7 @@ public class Controller extends HttpServlet {
 	private HashSet<String> allowedOperations = new HashSet<String>();
 	private static String MSG_ATTR = "msg";
 	private HashMap<HttpSession,GroceryListServiceRemote> users = null;	
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -52,27 +52,27 @@ public class Controller extends HttpServlet {
 		super.init();
 		if (users == null) users = new HashMap<HttpSession,GroceryListServiceRemote>();
 		initializeServlet();
-		
+
 		//initializeRemoteService();
 	}
-		
+
 	private void initializeRemoteService(HttpSession userSession) {		
 		System.out.println("Connecting with session id: "+userSession.getId()+" to the remote list service...");		
-        Properties jndiProps = new Properties();
-        jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
-        jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
-        jndiProps.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8081");
-        //This property is important for remote resolving
-        jndiProps.put("jboss.naming.client.ejb.context", true);
-        //This propert is not important for remote resolving
-        jndiProps.put("org.jboss.ejb.client.scoped.context", true);
-    
-        // username
-        jndiProps.put(Context.SECURITY_PRINCIPAL, "user");
-        // password
-        jndiProps.put(Context.SECURITY_CREDENTIALS, "pw");
-        
-        try {
+		Properties jndiProps = new Properties();
+		jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
+		jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
+		jndiProps.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8081");
+		//This property is important for remote resolving
+		jndiProps.put("jboss.naming.client.ejb.context", true);
+		//This propert is not important for remote resolving
+		jndiProps.put("org.jboss.ejb.client.scoped.context", true);
+
+		// username
+		jndiProps.put(Context.SECURITY_PRINCIPAL, "user");
+		// password
+		jndiProps.put(Context.SECURITY_CREDENTIALS, "pw");
+
+		try {
 			initialContext = new InitialContext(jndiProps);
 			gListService = (GroceryListServiceRemote) initialContext.lookup("java:grocery-backend/GroceryListService!it.unitn.dsantoro.a9.GroceryListServiceRemote");
 			System.out.println("Succesfully connected.");			
@@ -81,7 +81,7 @@ public class Controller extends HttpServlet {
 			e.printStackTrace();
 		}        
 	}
-	
+
 	private void initializeServlet() {
 		allowedOperations.add("showDashboard");
 		allowedOperations.add("addList");
@@ -95,7 +95,7 @@ public class Controller extends HttpServlet {
 		allowedOperations.add("incProd");
 	}
 
-	
+
 	private void addList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String listName = request.getParameter("listName");		
 		if ( listName != null ) {
@@ -109,7 +109,7 @@ public class Controller extends HttpServlet {
 		}
 		response.sendRedirect(request.getHeader("referer"));
 	}
-	
+
 	private void showDashboard(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Collection<GroceryList> gLists = gListService.findMyGroceryLists();
 		if (!gLists.isEmpty()) {
@@ -121,7 +121,7 @@ public class Controller extends HttpServlet {
 		request.setAttribute("userLists", gLists);
 		response.sendRedirect(request.getHeader("referer"));
 	}	
-	
+
 	private void message(HttpServletRequest request, String messageSeverity, String text) {		
 		ArrayDeque<Message> msgQueue = (ArrayDeque<Message>) request.getSession(true).getAttribute("msgQueue");
 		if (msgQueue == null) {
@@ -131,7 +131,7 @@ public class Controller extends HttpServlet {
 		msgQueue.addFirst(new Message(messageSeverity, text));		
 		request.setAttribute(MSG_ATTR, msgQueue);
 	}
-	
+
 	private void deleteList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String listId = request.getParameter("listId");		
 		if ( listId != null ) {
@@ -145,7 +145,7 @@ public class Controller extends HttpServlet {
 		}
 		response.sendRedirect(request.getHeader("referer"));		
 	}
-	
+
 	private void showList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		GroceryList list = (GroceryList) request.getSession(true).getAttribute("currentList");
 
@@ -166,18 +166,17 @@ public class Controller extends HttpServlet {
 		}
 		else {
 			message(request, Message.ERROR, "Not found list with id: " + listId);
-			error = true;			
+			error = true;
 		}
-		if (error) { 
-			response.sendRedirect("home.jsp");
+		if (error) {
+			response.sendRedirect("home.jsp");			
 		}
 		else {
 			request.setAttribute("list", list);
 			response.sendRedirect(request.getHeader("referer"));	
 		}
-		
 	}
-	
+
 	private void addProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String productName = request.getParameter("productName");
 		if ( productName != null ) {
@@ -192,18 +191,18 @@ public class Controller extends HttpServlet {
 		}
 		response.sendRedirect(request.getHeader("referer"));
 	}
-	
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		checkUser(session);
-		
+
 		String operation = request.getParameter("op");
 		//String json = "";
 		//PrintWriter out = response.getWriter();
-	
+
 		if (allowedOperations.contains(operation)) {    		
 			switch (operation) {
 			case "showDashboard":
@@ -232,7 +231,7 @@ public class Controller extends HttpServlet {
 				break;
 			case "decProd":
 				decProduct(request, response);
-				break;
+				break;			
 			default:
 				throw new ServletException("Invalid URI");
 			}
@@ -256,12 +255,12 @@ public class Controller extends HttpServlet {
 				else {
 					message(request, Message.WARNING, "Minimum quantity is 1");	
 				}
-		}
+			}
 			else {
 				message(request, Message.ERROR, "Prod id must be present");
 			}
-		response.sendRedirect(request.getHeader("referer"));
-	}
+			response.sendRedirect(request.getHeader("referer"));
+		}
 	}
 	private void incProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String prodId = request.getParameter("prodId");
@@ -278,12 +277,12 @@ public class Controller extends HttpServlet {
 				else {
 					message(request, Message.WARNING, "Maximum quantity is 5");	
 				}
-		}
+			}
 			else {
 				message(request, Message.ERROR, "Prod id must be present");
 			}
-		response.sendRedirect(request.getHeader("referer"));
-	}	
+			response.sendRedirect(request.getHeader("referer"));
+		}	
 	}
 	private void changeStatusProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String prodId = request.getParameter("prodId");
@@ -309,9 +308,21 @@ public class Controller extends HttpServlet {
 		}
 		response.sendRedirect(request.getHeader("referer"));
 	}
-	private void deleteProduct(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
+	private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String prodId = request.getParameter("prodId");
+		if ( prodId != null ) {
+			if (!prodId.isEmpty()) {
+				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
+				Product p = gl.getProduct(Long.parseLong(prodId));
+				gListService.delProduct(p.getId(), p.getGroceryList().getId());			
+				message(request, Message.INFO, "Prod "+ prodId +" has been deleted.");
+			} 
+			else {
+				message(request, Message.ERROR, "Prod id must be present");
+			}
+		}
+		response.sendRedirect(request.getHeader("referer"));
+
 	}
 	private void checkUser(HttpSession userSession) {
 		if (users.containsKey(userSession) ) {
@@ -319,8 +330,8 @@ public class Controller extends HttpServlet {
 		}
 		else {
 			initializeRemoteService(userSession);
-			//this.hangman = new Hangman();
 			users.put(userSession, gListService);
+			userSession.setAttribute("msgQueue", null);
 		}
 	}
 	/**
