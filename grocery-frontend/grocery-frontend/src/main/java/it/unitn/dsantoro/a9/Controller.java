@@ -93,6 +93,8 @@ public class Controller extends HttpServlet {
 		allowedOperations.add("deleteProduct");
 		allowedOperations.add("decProd");
 		allowedOperations.add("incProd");
+		allowedOperations.add("changeName");
+		allowedOperations.add("asyncUpdateLog");
 	}
 
 
@@ -159,9 +161,6 @@ public class Controller extends HttpServlet {
 			request.getSession(true).setAttribute("currentList", list);
 			if (list.getProducts().size() == 0) {
 				message(request, Message.WARNING, "No product present, please create one");
-			}
-			else {
-				message(request, Message.INFO, "Retrieved "+ list.getProducts().size() + " products");
 			}
 		}
 		else {
@@ -231,7 +230,13 @@ public class Controller extends HttpServlet {
 				break;
 			case "decProd":
 				decProduct(request, response);
-				break;			
+				break;
+			case "changeName":
+				changeName(request, response);
+				break;
+			case "asyncUpdateLog":
+				asyncUpdateLog(request, response);
+				break;
 			default:
 				throw new ServletException("Invalid URI");
 			}
@@ -250,10 +255,10 @@ public class Controller extends HttpServlet {
 				if (q > 0) {					
 					p.setQuantity(q - 1);
 					gListService.updateProduct(p);
-					message(request, Message.INFO, "Prod "+ prodId +" quantity has been decreased from " + q + " to " + (q-1) + ".");
+					message(request, Message.WARNING, "Prod "+ prodId +" quantity has been decreased from " + q + " to " + (q-1) + ".");
 				}
 				else {
-					message(request, Message.WARNING, "Minimum quantity is 1");	
+					message(request, Message.ERROR, "Minimum quantity is 1");	
 				}
 			}
 			else {
@@ -272,10 +277,10 @@ public class Controller extends HttpServlet {
 				if (q < 5) {
 					p.setQuantity(q + 1);
 					gListService.updateProduct(p);
-					message(request, Message.INFO, "Prod "+ prodId +" quantity has been increased from " + q + " to " + (q+1) + ".");
+					message(request, Message.WARNING, "Prod "+ prodId +" quantity has been increased from " + q + " to " + (q+1) + ".");
 				}
 				else {
-					message(request, Message.WARNING, "Maximum quantity is 5");	
+					message(request, Message.ERROR, "Maximum quantity is 5");	
 				}
 			}
 			else {
@@ -300,7 +305,7 @@ public class Controller extends HttpServlet {
 					newStatus = "list";
 				}
 
-				message(request, Message.INFO, "Prod "+ prodId +" has been moved to " + newStatus + ".");
+				message(request, Message.WARNING, "Prod "+ prodId +" has been moved to " + newStatus + ".");
 			} 
 			else {
 				message(request, Message.ERROR, "Prod id must be present");
@@ -315,7 +320,7 @@ public class Controller extends HttpServlet {
 				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
 				Product p = gl.getProduct(Long.parseLong(prodId));
 				gListService.delProduct(p.getId(), p.getGroceryList().getId());			
-				message(request, Message.INFO, "Prod "+ prodId +" has been deleted.");
+				message(request, Message.WARNING, "Prod "+ prodId +" has been deleted.");
 			} 
 			else {
 				message(request, Message.ERROR, "Prod id must be present");
@@ -324,6 +329,35 @@ public class Controller extends HttpServlet {
 		response.sendRedirect(request.getHeader("referer"));
 
 	}
+	
+	private void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException {				
+		String prodId = request.getParameter("prodId");
+		String newName = request.getParameter("newName");
+		if ( (prodId != null) && (newName != null) ) {
+			if (!prodId.isEmpty()) {
+				GroceryList gl = (GroceryList) request.getSession(true).getAttribute("currentList");
+				Product p = gl.getProduct(Long.parseLong(prodId));
+				p.setName(newName);
+					gListService.updateProduct(p);
+					message(request, Message.WARNING, "Prod "+ prodId +" has been renamed (using Ajax) in " + newName + ".");
+			}
+			else {
+				message(request, Message.ERROR, "Prod id and name must be present");
+			}			
+			//response.sendRedirect(request.getHeader("referer"));
+		}	
+	}
+	
+	private void asyncUpdateLog(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ArrayDeque<Message> msgQueue = (ArrayDeque<Message>) request.getSession(true).getAttribute("msgQueue");
+		System.out.println(msgQueue.getFirst());
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/plain");
+		out = response.getWriter();
+		out.print(msgQueue.getFirst());
+		//response.sendRedirect(request.getHeader("referer"));
+	}
+	
 	private void checkUser(HttpSession userSession) {
 		if (users.containsKey(userSession) ) {
 			this.gListService = users.get(userSession);

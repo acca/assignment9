@@ -10,6 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>List detail</title>
 <link rel="stylesheet" type="text/css" href="styles/style.css">
+<script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="script.js"></script>
 </head>
 <body>
 	<jsp:include page="/Controller">
@@ -48,8 +50,8 @@
 				<div class="row">
 					<div class="cell details">
 
-						<div class="name">
-							<a href="product.jsp?prodId=<%=prod.getId()%>"> <%=prod.getName()%></a>
+						<div class="name single-line" contenteditable="true" prodId="<%=prod.getId()%>">							
+							<%=prod.getName()%>
 						</div>
 
 						<div class="detail">
@@ -59,14 +61,15 @@
 							<%=prod.getPricePerUnit()%></div>
 					</div>
 					<div class="cell operations">
-						<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
-							<button>Delete</button>
-						</a> <a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
+						<a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
 							<button>In cart</button>
 						</a> <a href="Controller?op=incProd&prodId=<%=prod.getId()%>">
 							<button>Increase</button>
 						</a> <a href="Controller?op=decProd&prodId=<%=prod.getId()%>">
 							<button>Decrease</button>
+						</a>
+						<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
+							<button>Delete</button>
 						</a>
 					</div>
 				</div>
@@ -84,8 +87,8 @@
 			<div class="row">
 				<div class="cell details">
 
-					<div class="name">
-						<a href="product.jsp?prodId=<%=prod.getId()%>"> <%=prod.getName()%></a>
+					<div class="name">						
+						<%=prod.getName()%>
 					</div>
 
 					<div class="detail">
@@ -95,12 +98,12 @@
 						<%=prod.getPricePerUnit()%></div>
 				</div>
 				<div class="cell operations">
-					<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
-						<button>Delete</button>
-					</a> <a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
+					 <a href="Controller?op=changeStatus&prodId=<%=prod.getId()%>">
 						<button>In list</button>
 					</a>
-
+					<a href="Controller?op=deleteProduct&prodId=<%=prod.getId()%>">
+						<button>Delete</button>
+					</a>
 				</div>
 			</div>
 			<%

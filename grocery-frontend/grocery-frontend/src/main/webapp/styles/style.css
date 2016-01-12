@@ -83,7 +83,11 @@ div.cell.details:hover {
 	overflow-y: auto;
 	height: 300px;
 }
-
+#logs div {
+	border: solid 1px gray;
+	margin: 2px;
+	padding:2px;
+}
 #body button { 
 	font-size: large;
 	height: 50px;
@@ -113,4 +117,22 @@ a:hover,
 a:active {
     text-decoration: none;
     color: black;
+}
+
+.cell .prodId { 
+	visibility: hidden;
+}
+
+[contenteditable="true"].single-line {
+	white-space: nowrap;
+	
+	overflow: hidden;
+} 
+[contenteditable="true"].single-line br {
+	display: none;
+
+}
+[contenteditable="true"].single-line * {
+	display: inline;
+	white-space: nowrap;
 }
