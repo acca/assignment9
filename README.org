@@ -39,15 +39,15 @@
 
   Specific functionality of each class/files are described below, separated by projects:
 ** Backend
-   - *Package =it.unitn.dsantoro.a9.model=*: Contains the Entity Beans: classes used to represent the application model which are automatically created and updated to the persistent layer through ORM.
+   - *Package* =it.unitn.dsantoro.a9.model=: Contains the Entity Beans: classes used to represent the application model which are automatically created and updated to the persistent layer through ORM.
      - *User.java*
      - *GroceryList.java*
      - *Product.java*
-   - *Package =it.unitn.dsantoro.a9.test=*: Classes used as test suite to test the behavior of the various remote methods of the EJB and to test the methods of the entities.
+   - *Package* =it.unitn.dsantoro.a9.test=: Classes used as test suite to test the behavior of the various remote methods of the EJB and to test the methods of the entities.
      - *GroceryListServiceTest.java*
      - *GroceryListServiceTest2.java*
      - *GroceryListDBTest.java*
-   - *Package =it.unitn.dsantoro.a9.=*: 
+   - *Package* =it.unitn.dsantoro.a9.=: 
      - *GroceryListService.java*:
      - *GroceryListServiceRemote.java*:
    - *persistence.xml*: This file contains two persitence-units, one (mapped to JBoss datasource exposed via JNDI) used to connect the main EJB and the other (mapped directly to the MySql used for development) used to test methods on the DB, since JUnit has problem in accessing the JNDI context.
@@ -64,7 +64,6 @@
    - *index.jsp*: Just a JSP page which redirect the user to the application dashboard.
 
    - *home.jsp*: Application dashboard showing the lists of the user.
-
    
 * Deployment
   The repository contains two /Maven/ based project developed using Eclipse which can be deployed following the below instructions.
@@ -101,4 +100,6 @@
    /(IP address will be shared only in the mail to the teacher for security reasons)/
 
 * Comments and Notes
-  Some classi non implementate, tatnotlavoro nel modellare
+  In respect to the initial plan, some classes has not been implemented due to wrong plan/scheduling of the effort. In particular the functionality related to sharing, revoking and user permission of the list are not yet ready, for this reason the user session persist only in the browser session lifetime.
+
+  In conclusion I must say that an huge work has been done in modeling the various classes and components, probably the hardest part on the project.
