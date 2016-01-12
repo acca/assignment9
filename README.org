@@ -86,9 +86,9 @@
       cd ../grocery-fronted
       mvn install
       #+END_EXAMPLE
-   4) Move the generated builds on the proper servers:
-      - =grocery-backend/target/= file into your JBoss =deployments= folder
-      - =grocery-frontend/target/= file into your Tomcat =webapps= folder      
+   4) Move the generated builds on the proper servers and rename accordingly:
+      - =grocery-backend/target/= jar file into your JBoss =deployments= folder and rename as grocery-backend
+      - =grocery-frontend/target/= file into your Tomcat =webapps= folder
    5) Have a nice time with AJAX polling update from client to server:
       http://localhost:8080/assignment7
 
@@ -101,5 +101,7 @@
 
 * Comments and Notes
   In respect to the initial plan, some classes has not been implemented due to wrong plan/scheduling of the effort. In particular the functionality related to sharing, revoking and user permission of the list are not yet ready, for this reason the user session persist only in the browser session lifetime.
+
+  Some ideas to enhance the business logic inside the back-end tier are: include /total price calculation, look up of less expansive supermarket using web services/.
 
   In conclusion I must say that an huge work has been done in modeling the various classes and components, probably the hardest part on the project.
