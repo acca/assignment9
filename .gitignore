@@ -4,6 +4,7 @@
 *.DS_Store
 \#*
 .#*
+README.html
 
 # Ignore binary files
 *.class
