@@ -4,27 +4,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
-import java.util.Queue;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-
-import it.unitn.dsantoro.a9.GroceryListService;
 import it.unitn.dsantoro.a9.GroceryListServiceRemote;
 import it.unitn.dsantoro.a9.model.GroceryList;
 import it.unitn.dsantoro.a9.model.Product;
@@ -38,7 +30,9 @@ public class Controller extends HttpServlet {
 	private GroceryListServiceRemote gListService;
 	private HashSet<String> allowedOperations = new HashSet<String>();
 	private static String MSG_ATTR = "msg";
-	private HashMap<HttpSession,GroceryListServiceRemote> users = null;	
+	private HashMap<HttpSession,GroceryListServiceRemote> users = null;
+	private static String BACKEND_HOST = "127.0.0.1";
+	private static String BACKEND_PORT = "8081";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -61,7 +55,7 @@ public class Controller extends HttpServlet {
 		Properties jndiProps = new Properties();
 		jndiProps.put(Context.INITIAL_CONTEXT_FACTORY,"org.jboss.naming.remote.client.InitialContextFactory");
 		jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");        
-		jndiProps.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8081");
+		jndiProps.put(Context.PROVIDER_URL, "http-remoting://"+BACKEND_HOST+":"+BACKEND_PORT);
 		//This property is important for remote resolving
 		jndiProps.put("jboss.naming.client.ejb.context", true);
 		//This propert is not important for remote resolving
@@ -139,7 +133,7 @@ public class Controller extends HttpServlet {
 		if ( listId != null ) {
 			if (!listId.isEmpty()) {
 				gListService.delGroceryList(Long.parseLong(listId));
-				message(request, Message.INFO, "List "+ listId +" has been deleted.");
+				message(request, Message.WARNING, "List "+ listId +" has been deleted.");
 			} 
 			else {				
 				message(request, Message.ERROR, "List id must be present");
