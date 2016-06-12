@@ -69,7 +69,7 @@ public class Controller extends HttpServlet {
 		try {
 			initialContext = new InitialContext(jndiProps);
 			gListService = (GroceryListServiceRemote) initialContext.lookup("java:grocery-backend/GroceryListService!it.unitn.dsantoro.a9.GroceryListServiceRemote");
-			System.out.println("Succesfully connected.");			
+			System.out.println("Successfully connected.");			
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
